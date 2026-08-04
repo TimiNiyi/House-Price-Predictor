@@ -188,7 +188,7 @@ if st.button("Predict Price"):
        f"${prediction:,.0f}"
     )
     
-    st.subheader("User input")
+    st.subheader("Your input")
     
     st.dataframe(new_house)
     
