@@ -1,8 +1,24 @@
 import joblib
 import streamlit as st
 import pandas as pd
+import json
 
-model=joblib.load("House_price_model.pkl")
+@st.cache_resource
+def load_model():
+    return joblib.load("House_price_model.pkl")
+
+@st.cache_data
+def load_lookup():
+    return pd.read_csv("state_city_lookup.csv")
+
+@st.cache_data
+def load_metrics():
+    with open("metrics.json") as f:
+        return json.load(f)
+
+model = load_model()
+lookup = load_lookup()
+metrics = load_metrics()
 
 st.set_page_config(
     page_title="US House Price Prediction",
@@ -24,22 +40,37 @@ col1, col2, col3 = st.columns(3)
 
 col1.metric(
     "R2 Score",
-    "0.727"
+    f'{metrics["r2"]:.3f}'
 )
 
 col2.metric(
     "Test MAE",
-    "$93,639"
+    f'${metrics["test_mae"]:,.0f}'
+
 )
 
 col3.metric(
     "RMSE",
-    "$157,347"
+    f'${metrics["rmse"]:,.0f}'
 )
 
 st.divider()
 
 st.sidebar.title("About the Model")
+
+st.sidebar.markdown(
+    f"""
+                    
+    ### Performance
+
+    - **R²:** {metrics["r2"]:.3f}
+
+    - **Test MAE:** ${metrics["test_mae"]:,.0f}
+
+    - **RMSE:** ${metrics["rmse"]:,.0f}
+    
+    """
+)
 
 st.sidebar.info(
     """
@@ -55,10 +86,6 @@ st.sidebar.info(
     - Lot Size
     - City
     - State
-
-    **Performance**
-    - R² = 0.727
-    - MAE ≈ $93,600
     """
 )
 
@@ -106,11 +133,12 @@ with left:
         2000
     )
     
-df = pd.read_csv("realtor-data.zip.csv")
 
-states = sorted(df["state"].dropna().unique())
+# lookup = pd.read_csv("state_city_lookup.csv")
 
-cities = df["city"].dropna().unique()
+states = sorted(lookup["state"].dropna().unique())
+
+cities = lookup["city"].dropna().unique()
 
 with right:
     sqft_lot = st.slider(
@@ -126,7 +154,7 @@ with right:
     )
     
     filtered_cities = (
-    df[df["state"] == state]["city"]
+    lookup[lookup["state"] == state]["city"]
     .dropna()
     .sort_values()
     .unique()

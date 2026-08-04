@@ -1,0 +1,8 @@
+{
+    "algorithm": "Ridge Regression",
+    "baseline_mae": 214309.83,
+    "train_mae": 92698.28,
+    "test_mae": 93639.38,
+    "rmse": 157347.37,
+    "r2": 0.7266
+}
