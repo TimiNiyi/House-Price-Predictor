@@ -5,7 +5,7 @@ import json
 
 @st.cache_resource
 def load_model():
-    return joblib.load("House_price_model_2.pkl")
+    return joblib.load("House_price_model.pkl")
 
 @st.cache_data
 def load_lookup():
