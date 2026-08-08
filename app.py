@@ -181,11 +181,11 @@ if st.button("Predict Price"):
         
        })
     
-    st.write("### Debug information")
-    st.write(new_house)
-    st.write(new_house.dtypes)
-    st.write("Missing values:")
-    st.write(new_house.isna().sum())
+    # st.write("### Debug information")
+    # st.write(new_house)
+    # st.write(new_house.dtypes)
+    # st.write("Missing values:")
+    # st.write(new_house.isna().sum())
     
     prediction = model.predict(new_house)[0]
     
